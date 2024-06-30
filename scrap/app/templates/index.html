@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vagas de Emprego</title>
+    <style>
+        table {width: 100%; border-collapse: collapse;}
+        th, td {border: 1px solid black; padding: 8px; text-align: left;}
+        th {background-color: #f2f2f2;}
+        #loading-message {
+            display: none;
+            font-size: 1.2em;
+            color: blue;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function showLoadingMessage() {
+            document.getElementById('loading-message').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>Vagas de Emprego</h1>
+    <form method="POST" action="{{ url_for('routes.scrape') }}" onsubmit="showLoadingMessage()">
+        <label for="job_type">Tipo de Vaga:</label>
+        <input type="text" id="job_type" name="job_type" required>
+        
+        <label for="city">Cidade:</label>
+        <select id="city" name="city">
+            <option value="sao-jose-dos-campos">São José dos Campos</option>
+            <option value="jacarei">Jacareí</option>
+            <option value="taubate">Taubaté</option>
+            <option value="cacapava">Caçapava</option>
+            <option value="pindamonhangaba">Pindamonhangaba</option>
+        </select>
+        
+        <label for="max_pages">Número de Páginas:</label>
+        <input type="number" id="max_pages" name="max_pages" value="1" min="1">
+        
+        <label for="is_internship">Estágio:</label>
+        <input type="checkbox" id="is_internship" name="is_internship" value="1">
+        
+        <button type="submit">Buscar</button>
+    </form>
+    
+    <div id="loading-message">Buscando vagas, por favor aguarde...</div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Título da Vaga</th>
+                <th>Cargo/Função</th>
+                <th>Localização</th>
+                <th>Salário</th>
+                <th>Empresa</th>
+                <th>Descrição Geral</th>
+                <th>Requisitos</th>
+                <th>Atribuições</th>
+                <th>Tipo de Vínculo</th>
+                <th>Benefícios</th>
+                <th>Cursos</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in data %}
+            <tr>
+                <td>{{ job['Título da Vaga'] }}</td>
+                <td>{{ job['Cargo/Função'] }}</td>
+                <td>{{ job['Localização'] }}</td>
+                <td>{{ job['Salário'] }}</td>
+                <td>{{ job['Empresa'] }}</td>
+                <td>{{ job['Descrição Geral'] }}</td>
+                <td>{{ job['Requisitos'] }}</td>
+                <td>{{ job['Atribuições'] }}</td>
+                <td>{{ job['Tipo de Vínculo'] }}</td>
+                <td>{{ job['Benefícios'] }}</td>
+                <td>{{ job['Cursos'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <form method="get" action="{{ url_for('routes.download') }}" onsubmit="showLoadingMessage()">
+        <button type="submit">Baixar CSV</button>
+    </form>
+</body>
+</html>
